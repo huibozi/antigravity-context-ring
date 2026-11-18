@@ -1,0 +1,563 @@
+/* ============================================================================
+ * user/custom.css — 可视化上下文容量圆环胶囊 + 仪表盘详情卡
+ * 仿照 antigravity-context-viewer / EasyAntigravity 视觉架构
+ * 兼容：高对比暖白 / ClaudeDesktop 净白 / 复古羊皮纸 + 官方 onyx 黑夜模式
+ * ============================================================================ */
+
+/* 1. 四档容量健康度语义变量（浅色模式默认，同时覆盖胶囊与悬浮卡片） */
+#ag-live-metrics-pill .ag-ctx-capsule[data-ctx-level="low"],
+#ag-live-metrics-tooltip[data-ctx-level="low"] {
+  --ag-ctx-fg: #15803D;
+  --ag-ctx-accent: #16A34A;
+  --ag-ctx-soft: rgba(22, 163, 74, 0.28);
+  --ag-ctx-bg: rgba(22, 163, 74, 0.08);
+  --ag-ctx-bdr: rgba(22, 163, 74, 0.26);
+}
+
+#ag-live-metrics-pill .ag-ctx-capsule[data-ctx-level="mid"],
+#ag-live-metrics-tooltip[data-ctx-level="mid"] {
+  --ag-ctx-fg: #9A3412;
+  --ag-ctx-accent: #D97706;
+  --ag-ctx-soft: rgba(217, 119, 6, 0.32);
+  --ag-ctx-bg: rgba(217, 119, 6, 0.09);
+  --ag-ctx-bdr: rgba(217, 119, 6, 0.28);
+}
+
+#ag-live-metrics-pill .ag-ctx-capsule[data-ctx-level="warn"],
+#ag-live-metrics-tooltip[data-ctx-level="warn"] {
+  --ag-ctx-fg: #C2410C;
+  --ag-ctx-accent: #EA580C;
+  --ag-ctx-soft: rgba(234, 88, 12, 0.34);
+  --ag-ctx-bg: rgba(234, 88, 12, 0.11);
+  --ag-ctx-bdr: rgba(234, 88, 12, 0.34);
+}
+
+#ag-live-metrics-pill .ag-ctx-capsule[data-ctx-level="crit"],
+#ag-live-metrics-tooltip[data-ctx-level="crit"] {
+  --ag-ctx-fg: #B91C1C;
+  --ag-ctx-accent: #DC2626;
+  --ag-ctx-soft: rgba(220, 38, 38, 0.36);
+  --ag-ctx-bg: rgba(220, 38, 38, 0.12);
+  --ag-ctx-bdr: rgba(220, 38, 38, 0.38);
+}
+
+/* 黑夜模式语义变量 */
+:is(html[data-ag-theme-mode="dark"] body, body.dark, body.theme-dark) #ag-live-metrics-pill .ag-ctx-capsule[data-ctx-level="low"],
+:is(html[data-ag-theme-mode="dark"] body, body.dark, body.theme-dark) #ag-live-metrics-tooltip[data-ctx-level="low"] {
+  --ag-ctx-fg: #34D399;
+  --ag-ctx-accent: #10B981;
+  --ag-ctx-soft: rgba(52, 211, 153, 0.35);
+  --ag-ctx-bg: rgba(16, 185, 129, 0.14);
+  --ag-ctx-bdr: rgba(52, 211, 153, 0.30);
+}
+
+:is(html[data-ag-theme-mode="dark"] body, body.dark, body.theme-dark) #ag-live-metrics-pill .ag-ctx-capsule[data-ctx-level="mid"],
+:is(html[data-ag-theme-mode="dark"] body, body.dark, body.theme-dark) #ag-live-metrics-tooltip[data-ctx-level="mid"] {
+  --ag-ctx-fg: #FBBF24;
+  --ag-ctx-accent: #F59E0B;
+  --ag-ctx-soft: rgba(251, 191, 36, 0.36);
+  --ag-ctx-bg: rgba(245, 158, 11, 0.14);
+  --ag-ctx-bdr: rgba(251, 191, 36, 0.32);
+}
+
+:is(html[data-ag-theme-mode="dark"] body, body.dark, body.theme-dark) #ag-live-metrics-pill .ag-ctx-capsule[data-ctx-level="warn"],
+:is(html[data-ag-theme-mode="dark"] body, body.dark, body.theme-dark) #ag-live-metrics-tooltip[data-ctx-level="warn"] {
+  --ag-ctx-fg: #FB923C;
+  --ag-ctx-accent: #F97316;
+  --ag-ctx-soft: rgba(251, 146, 60, 0.38);
+  --ag-ctx-bg: rgba(249, 115, 22, 0.16);
+  --ag-ctx-bdr: rgba(251, 146, 60, 0.36);
+}
+
+:is(html[data-ag-theme-mode="dark"] body, body.dark, body.theme-dark) #ag-live-metrics-pill .ag-ctx-capsule[data-ctx-level="crit"],
+:is(html[data-ag-theme-mode="dark"] body, body.dark, body.theme-dark) #ag-live-metrics-tooltip[data-ctx-level="crit"] {
+  --ag-ctx-fg: #F87171;
+  --ag-ctx-accent: #EF4444;
+  --ag-ctx-soft: rgba(248, 113, 113, 0.40);
+  --ag-ctx-bg: rgba(239, 68, 68, 0.18);
+  --ag-ctx-bdr: rgba(248, 113, 113, 0.42);
+}
+
+/* 2. 输入框底栏内联胶囊与环形进度条 */
+#antigravity\.agentSidePanelInputBox #ag-live-metrics-pill,
+#ag-live-metrics-pill {
+  height: 24px !important;
+  margin-left: 4px !important;
+  padding: 0 3px !important;
+  border-left: none !important;
+  cursor: pointer !important;
+  opacity: 1 !important;
+}
+
+#antigravity\.agentSidePanelInputBox #ag-live-metrics-pill[data-ag-row-mode="bottom"],
+#ag-live-metrics-pill[data-ag-row-mode="bottom"] {
+  height: 26px !important;
+  min-height: 26px !important;
+  max-height: 26px !important;
+  margin: 2px 4px 2px 4px !important;
+  padding: 3px 4px 0 4px !important;
+  border-top: 1px dashed rgba(0, 0, 0, 0.14) !important;
+}
+
+:is(html[data-ag-theme-mode="dark"] body, body.dark, body.theme-dark) #ag-live-metrics-pill[data-ag-row-mode="bottom"] {
+  border-top-color: rgba(255, 255, 255, 0.14) !important;
+}
+
+#antigravity\.agentSidePanelInputBox #ag-live-metrics-pill #ag-live-metrics-text,
+#ag-live-metrics-pill #ag-live-metrics-text {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
+  text-shadow: none !important;
+}
+
+#antigravity\.agentSidePanelInputBox #ag-live-metrics-pill .ag-ctx-capsule,
+#ag-live-metrics-pill .ag-ctx-capsule {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 20px;
+  padding: 0 7px 0 5px;
+  border-radius: 999px;
+  background-color: var(--ag-ctx-bg);
+  border: 1px solid var(--ag-ctx-bdr);
+  transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+#antigravity\.agentSidePanelInputBox #ag-live-metrics-pill:hover .ag-ctx-capsule,
+#ag-live-metrics-pill:hover .ag-ctx-capsule {
+  box-shadow: 0 0 0 1px var(--ag-ctx-bdr);
+}
+
+#antigravity\.agentSidePanelInputBox #ag-live-metrics-pill[data-pinned="1"] .ag-ctx-capsule,
+#ag-live-metrics-pill[data-pinned="1"] .ag-ctx-capsule {
+  box-shadow: 0 0 0 1.5px var(--ag-ctx-accent);
+}
+
+#antigravity\.agentSidePanelInputBox #ag-live-metrics-pill svg.ag-ctx-ring,
+#ag-live-metrics-pill svg.ag-ctx-ring {
+  width: 14px !important;
+  height: 14px !important;
+  flex: 0 0 14px !important;
+  display: block !important;
+  overflow: visible !important;
+}
+
+#antigravity\.agentSidePanelInputBox #ag-live-metrics-pill svg .ag-ctx-ring-track,
+#ag-live-metrics-pill svg .ag-ctx-ring-track {
+  fill: none !important;
+  stroke: rgba(0, 0, 0, 0.13) !important;
+}
+
+:is(html[data-ag-theme-mode="dark"] body, body.dark, body.theme-dark) #antigravity\.agentSidePanelInputBox #ag-live-metrics-pill svg .ag-ctx-ring-track,
+:is(html[data-ag-theme-mode="dark"] body, body.dark, body.theme-dark) #ag-live-metrics-pill svg .ag-ctx-ring-track {
+  stroke: rgba(255, 255, 255, 0.18) !important;
+}
+
+#antigravity\.agentSidePanelInputBox #ag-live-metrics-pill svg .ag-ctx-ring-fill,
+#ag-live-metrics-pill svg .ag-ctx-ring-fill {
+  fill: none !important;
+  stroke: var(--ag-ctx-accent) !important;
+  transition: stroke-dashoffset 0.28s cubic-bezier(0.22, 1, 0.36, 1), stroke 0.2s ease !important;
+}
+
+#antigravity\.agentSidePanelInputBox #ag-live-metrics-pill .ag-ctx-pct,
+#ag-live-metrics-pill .ag-ctx-pct {
+  font-family: var(--font-mono) !important;
+  font-weight: 700 !important;
+  font-size: 11px !important;
+  line-height: 1 !important;
+  color: var(--ag-ctx-fg) !important;
+  text-shadow: none !important;
+  letter-spacing: -0.02em !important;
+}
+
+#antigravity\.agentSidePanelInputBox #ag-live-metrics-pill .ag-ctx-ratio,
+#ag-live-metrics-pill .ag-ctx-ratio {
+  font-family: var(--font-mono) !important;
+  font-weight: 500 !important;
+  font-size: 10.5px !important;
+  line-height: 1 !important;
+  color: #383431 !important;
+  opacity: 0.9 !important;
+  text-shadow: none !important;
+  letter-spacing: -0.02em !important;
+}
+
+:is(html[data-ag-theme-mode="dark"] body, body.dark, body.theme-dark) #antigravity\.agentSidePanelInputBox #ag-live-metrics-pill .ag-ctx-ratio,
+:is(html[data-ag-theme-mode="dark"] body, body.dark, body.theme-dark) #ag-live-metrics-pill .ag-ctx-ratio {
+  color: #D8DAE3 !important;
+}
+
+#antigravity\.agentSidePanelInputBox #ag-live-metrics-pill .ag-ctx-tail,
+#ag-live-metrics-pill .ag-ctx-tail {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-mono) !important;
+  font-size: 10.5px !important;
+  font-weight: 500 !important;
+  color: #4A4642 !important;
+  opacity: 0.85 !important;
+  text-shadow: none !important;
+  letter-spacing: -0.02em !important;
+}
+
+:is(html[data-ag-theme-mode="dark"] body, body.dark, body.theme-dark) #antigravity\.agentSidePanelInputBox #ag-live-metrics-pill .ag-ctx-tail,
+:is(html[data-ag-theme-mode="dark"] body, body.dark, body.theme-dark) #ag-live-metrics-pill .ag-ctx-tail {
+  color: #A4A7B5 !important;
+}
+
+#antigravity\.agentSidePanelInputBox #ag-live-metrics-pill .ag-ctx-tail-sep,
+#ag-live-metrics-pill .ag-ctx-tail-sep {
+  opacity: 0.45 !important;
+}
+
+/* 3. 悬浮 / 点击固定的可视化容量仪表盘卡片 */
+#ag-live-metrics-tooltip {
+  width: 388px !important;
+  min-width: 340px !important;
+  max-width: calc(100vw - 24px) !important;
+  padding: 12px 14px !important;
+  border-radius: 11px !important;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.16), 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+  font-family: var(--font-sans) !important;
+}
+
+#ag-live-metrics-tooltip[data-visible="1"],
+#ag-live-metrics-tooltip[data-pinned="1"] {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: translateY(0) !important;
+}
+
+#ag-live-metrics-tooltip[data-pinned="1"] {
+  pointer-events: auto !important;
+  user-select: text !important;
+  border-color: var(--ag-ctx-bdr, rgba(0, 0, 0, 0.35)) !important;
+}
+
+:is(html[data-ag-theme-mode="dark"] body, body.dark, body.theme-dark) #ag-live-metrics-tooltip {
+  box-shadow: 0 16px 38px rgba(0, 0, 0, 0.68), 0 3px 10px rgba(0, 0, 0, 0.45) !important;
+}
+
+#ag-live-metrics-tooltip .ag-ctx-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+#ag-live-metrics-tooltip .ag-ctx-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+#ag-live-metrics-tooltip .ag-ctx-head-left {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+}
+
+#ag-live-metrics-tooltip .ag-ctx-title {
+  font-size: 12.5px !important;
+  font-weight: 700 !important;
+  color: var(--foreground, #1F1E1D) !important;
+  letter-spacing: -0.01em;
+}
+
+#ag-live-metrics-tooltip .ag-ctx-status-pill {
+  display: inline-flex;
+  align-items: center;
+  height: 18px;
+  padding: 0 7px;
+  border-radius: 999px;
+  font-size: 10px !important;
+  font-weight: 600 !important;
+  color: var(--ag-ctx-fg) !important;
+  background: var(--ag-ctx-bg) !important;
+  border: 1px solid var(--ag-ctx-bdr) !important;
+  white-space: nowrap;
+}
+
+#ag-live-metrics-tooltip .ag-ctx-head-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+#ag-live-metrics-tooltip .ag-ctx-gen {
+  font-family: var(--font-mono) !important;
+  font-size: 10px !important;
+  color: var(--muted-foreground, #57534E) !important;
+  opacity: 0.82;
+}
+
+#ag-live-metrics-tooltip .ag-ctx-pin-hint {
+  font-size: 9.5px !important;
+  color: var(--muted-foreground, #7A7670) !important;
+  opacity: 0.72;
+}
+
+#ag-live-metrics-tooltip[data-pinned="1"] .ag-ctx-pin-hint {
+  display: none;
+}
+
+#ag-live-metrics-tooltip .ag-ctx-close-btn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 5px;
+  border: 1px solid rgba(0, 0, 0, 0.14);
+  background: rgba(0, 0, 0, 0.04);
+  color: var(--foreground, #1F1E1D);
+  font-size: 13px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+}
+
+#ag-live-metrics-tooltip[data-pinned="1"] .ag-ctx-close-btn {
+  display: inline-flex;
+}
+
+#ag-live-metrics-tooltip .ag-ctx-close-btn:hover {
+  background: rgba(0, 0, 0, 0.10);
+}
+
+:is(html[data-ag-theme-mode="dark"] body, body.dark, body.theme-dark) #ag-live-metrics-tooltip .ag-ctx-close-btn {
+  border-color: rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.06);
+  color: #EAEBF1;
+}
+
+:is(html[data-ag-theme-mode="dark"] body, body.dark, body.theme-dark) #ag-live-metrics-tooltip .ag-ctx-close-btn:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+/* 分段进度条与图例 */
+#ag-live-metrics-tooltip .ag-ctx-bar-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+#ag-live-metrics-tooltip .ag-ctx-bar-track {
+  position: relative;
+  display: flex;
+  width: 100%;
+  height: 10px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.075);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.08);
+}
+
+:is(html[data-ag-theme-mode="dark"] body, body.dark, body.theme-dark) #ag-live-metrics-tooltip .ag-ctx-bar-track {
+  background: rgba(255, 255, 255, 0.09);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.35);
+}
+
+#ag-live-metrics-tooltip .ag-ctx-bar-cache {
+  height: 100%;
+  background: var(--ag-ctx-accent);
+  transition: width 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+#ag-live-metrics-tooltip .ag-ctx-bar-fresh {
+  height: 100%;
+  background-color: var(--ag-ctx-soft);
+  background-image: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 3px,
+    rgba(255, 255, 255, 0.28) 3px,
+    rgba(255, 255, 255, 0.28) 5px
+  );
+  transition: width 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+#ag-live-metrics-tooltip .ag-ctx-bar-tick {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: rgba(0, 0, 0, 0.22);
+  pointer-events: none;
+}
+
+:is(html[data-ag-theme-mode="dark"] body, body.dark, body.theme-dark) #ag-live-metrics-tooltip .ag-ctx-bar-tick {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+#ag-live-metrics-tooltip .ag-ctx-legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  font-family: var(--font-mono) !important;
+  font-size: 10px !important;
+  color: var(--muted-foreground, #57534E) !important;
+}
+
+#ag-live-metrics-tooltip .ag-ctx-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+#ag-live-metrics-tooltip .ag-ctx-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+#ag-live-metrics-tooltip .ag-ctx-dot-cache {
+  background: var(--ag-ctx-accent);
+}
+
+#ag-live-metrics-tooltip .ag-ctx-dot-fresh {
+  background: var(--ag-ctx-soft);
+  border: 1px solid var(--ag-ctx-accent);
+}
+
+#ag-live-metrics-tooltip .ag-ctx-dot-remain {
+  background: transparent;
+  border: 1px solid rgba(120, 113, 108, 0.55);
+}
+
+/* 三栏大字核心容量卡片 */
+#ag-live-metrics-tooltip .ag-ctx-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 7px;
+}
+
+#ag-live-metrics-tooltip .ag-ctx-stat-box {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 7px 9px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.032);
+  border: 1px solid rgba(0, 0, 0, 0.085);
+}
+
+:is(html[data-ag-theme-mode="dark"] body, body.dark, body.theme-dark) #ag-live-metrics-tooltip .ag-ctx-stat-box {
+  background: rgba(255, 255, 255, 0.045);
+  border-color: rgba(255, 255, 255, 0.09);
+}
+
+#ag-live-metrics-tooltip .ag-ctx-stat-lbl {
+  font-size: 10px !important;
+  color: var(--muted-foreground, #57534E) !important;
+}
+
+#ag-live-metrics-tooltip .ag-ctx-stat-val {
+  font-family: var(--font-mono) !important;
+  font-size: 14.5px !important;
+  font-weight: 700 !important;
+  line-height: 1.2 !important;
+  color: var(--foreground, #0A0A0A) !important;
+}
+
+#ag-live-metrics-tooltip .ag-ctx-stat-val.is-accent {
+  color: var(--ag-ctx-fg) !important;
+}
+
+#ag-live-metrics-tooltip .ag-ctx-stat-sub {
+  font-family: var(--font-mono) !important;
+  font-size: 9.5px !important;
+  color: var(--muted-foreground, #7A7670) !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 四栏紧凑速度/延迟条 */
+#ag-live-metrics-tooltip .ag-ctx-speed-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  padding: 7px 8px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.022);
+  border: 1px dashed rgba(0, 0, 0, 0.12);
+}
+
+:is(html[data-ag-theme-mode="dark"] body, body.dark, body.theme-dark) #ag-live-metrics-tooltip .ag-ctx-speed-grid {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.11);
+}
+
+#ag-live-metrics-tooltip .ag-ctx-mini-item {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+#ag-live-metrics-tooltip .ag-ctx-mini-lbl {
+  font-size: 9.5px !important;
+  color: var(--muted-foreground, #7A7670) !important;
+}
+
+#ag-live-metrics-tooltip .ag-ctx-mini-val {
+  font-family: var(--font-mono) !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  color: var(--foreground, #1F1E1D) !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 底部会话累计明细 */
+#ag-live-metrics-tooltip .ag-ctx-foot {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding-top: 6px;
+  border-top: 1px solid rgba(0, 0, 0, 0.10);
+  font-family: var(--font-mono) !important;
+}
+
+:is(html[data-ag-theme-mode="dark"] body, body.dark, body.theme-dark) #ag-live-metrics-tooltip .ag-ctx-foot {
+  border-top-color: rgba(255, 255, 255, 0.10);
+}
+
+#ag-live-metrics-tooltip .ag-ctx-foot-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  font-size: 10.5px !important;
+  line-height: 1.4 !important;
+}
+
+#ag-live-metrics-tooltip .ag-ctx-foot-lbl {
+  color: var(--muted-foreground, #57534E) !important;
+  flex-shrink: 0;
+}
+
+#ag-live-metrics-tooltip .ag-ctx-foot-val {
+  color: var(--foreground, #1F1E1D) !important;
+  text-align: right;
+  word-break: break-word;
+}
